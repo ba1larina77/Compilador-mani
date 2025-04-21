@@ -102,5 +102,5 @@ func suma(a int, b int) int {
 
 print(suma(x, 5));
 ```
-
+El resto de archivos son simplemente archivos de pruebas o copias rapidas de bloques grandes de codigo modificado
 
