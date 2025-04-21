@@ -1,0 +1,66 @@
+// test.gox
+
+// ------------------------------------------------
+// 1. Función importada y función normal
+// ------------------------------------------------
+//import func print_sum(a int, b float) float {
+//    var result float = a + b;
+//    return result;
+//}
+
+// ------------------------------------------------
+// 2. Declaraciones de variables y constantes
+// ------------------------------------------------
+//var x int = 10;
+//const y float = 2.5;
+//var flag bool = true;
+//var ch char = 'A';
+//
+// ------------------------------------------------
+// 3. Llamadas a print y a función
+// ------------------------------------------------
+//print(x + y);
+//print_sum(x, y);
+
+// ------------------------------------------------
+// 4. If / else con bloques anidados
+// ------------------------------------------------
+//if flag {
+//    print(ch);
+//} else {
+//    print('Z');
+//}
+
+// ------------------------------------------------
+// 5. While, break y continue
+// ------------------------------------------------
+
+var x int;
+while x > 0 {
+    
+    x = x - 1;
+    if x == 5 {
+        break;
+    }
+    continue;
+}
+
+// ------------------------------------------------
+// 6. Errores semánticos a propósito
+// ------------------------------------------------
+// 6.1 Uso de variable no declarada
+//undeclared_var = 42;
+
+// 6.2 Redeclaración de x
+//var x int;
+
+// 6.3 Asignación tipo-mismatched
+//const wrong bool = 1;
+
+// 6.4 Return fuera de función
+//return 123;
+
+// 6.5 Break fuera de bucle
+//break;
+
+//python main.py pruebas.gox
