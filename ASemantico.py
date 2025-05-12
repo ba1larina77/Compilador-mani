@@ -170,8 +170,8 @@ class SemanticAnalyzer:
             node.return_type = 'error'
         # Declare function
         self.declare_function(node.func_name.name,
-                              [p.param_type for p in node.parameters],
-                              node.return_type or 'void')
+                            [p.param_type for p in node.parameters],
+                            node.return_type or 'void')
         prev_return = self.current_function_return
         self.current_function_return = node.return_type or 'void'
         self.push_scope()

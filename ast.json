@@ -2,34 +2,88 @@
   "type": "Program",
   "statements": [
     {
-      "type": "FuncDeclaration",
-      "is_import": false,
-      "func_name": {
+      "type": "VarDeclaration",
+      "is_const": false,
+      "identifier": {
         "type": "Identifier",
-        "name": "t"
+        "name": "x"
       },
-      "parameters": [
-        {
-          "type": "Parameter",
-          "identifier": {
+      "var_type": "int",
+      "initializer": null
+    },
+    {
+      "type": "WhileStatement",
+      "condition": {
+        "type": "BinaryOp",
+        "left": {
+          "type": "Location",
+          "base": {
             "type": "Identifier",
             "name": "x"
           },
-          "param_type": "int"
+          "is_deref": false
+        },
+        "operator": ">",
+        "right": {
+          "type": "Literal",
+          "value": 0
         }
-      ],
-      "return_type": "int",
+      },
       "body": [
         {
-          "type": "ReturnStatement",
-          "expression": {
+          "type": "Assignment",
+          "location": {
             "type": "Location",
             "base": {
               "type": "Identifier",
               "name": "x"
             },
             "is_deref": false
+          },
+          "expression": {
+            "type": "BinaryOp",
+            "left": {
+              "type": "Location",
+              "base": {
+                "type": "Identifier",
+                "name": "x"
+              },
+              "is_deref": false
+            },
+            "operator": "-",
+            "right": {
+              "type": "Literal",
+              "value": 1
+            }
           }
+        },
+        {
+          "type": "IfStatement",
+          "condition": {
+            "type": "BinaryOp",
+            "left": {
+              "type": "Location",
+              "base": {
+                "type": "Identifier",
+                "name": "x"
+              },
+              "is_deref": false
+            },
+            "operator": "==",
+            "right": {
+              "type": "Literal",
+              "value": 5
+            }
+          },
+          "then_body": [
+            {
+              "type": "BreakStatement"
+            }
+          ],
+          "else_body": null
+        },
+        {
+          "type": "ContinueStatement"
         }
       ]
     }

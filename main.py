@@ -7,6 +7,8 @@ from lexer import Lexer
 from Parser import Parser
 from ASemantico import SemanticAnalyzer, SemanticError
 from Parser import ast_to_dict, write_ast_to_json
+from IRGenerator import IRGenerator
+
 
 def main(filepath):
     try:
@@ -26,11 +28,22 @@ def main(filepath):
 
         ast = parser.parse()
 
+        
         # 4) Semántico
 
         analyzer.analyze(ast)
 
-        # 5) Mostrar y guardar el AST en JSON
+        # 5) Generar código intermedio
+        irgen = IRGenerator()
+        instructions = irgen.generate(ast)
+        
+        # Mostrar IR generado
+        print("\n📥 Código Intermedio (IR):")
+        for instr in instructions:
+            print(instr)
+
+
+        # 6) Mostrar y guardar el AST en JSON
         ast_dict = ast_to_dict(ast)
         print(json.dumps(ast_dict, indent=2))
         write_ast_to_json(ast, filename="ast.json")
@@ -56,5 +69,13 @@ if __name__ == "__main__":
         sys.exit(1)
     main(sys.argv[1])
 
+
+# 1) Leer el archivo fuente
+# 2) Léxico
+# 3) Sintáctico
+# 4) Análisis semántico
+# 5) Generación de código intermedio
+# 6) Mostrar y guardar AST
+# 7) Mostrar y guardar IR
 
 #python main.py pruebas.gox
