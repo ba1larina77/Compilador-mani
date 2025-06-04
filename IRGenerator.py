@@ -29,7 +29,19 @@ class IRGenerator:
 
     def gen_Assignment(self, node):
         self.generate(node.expression)
-        self.instructions.append(IRInstruction("LOCAL_SET", node.location.base.name))
+        if isinstance(node.location, Location) and node.location.is_deref:
+            self.generate(node.location.base)
+            value_type = self.infer_expr_type(node.expression)
+            if value_type == 'int':
+                self.instructions.append(IRInstruction("POKEI"))
+            elif value_type == 'float':
+                self.instructions.append(IRInstruction("POKEF"))
+            elif value_type == 'char':
+                self.instructions.append(IRInstruction("POKEI"))
+            else:
+                raise Exception(f"Tipo no soportado para POKE: {value_type}")
+        else:
+            self.instructions.append(IRInstruction("LOCAL_SET", node.location.base.name))
 
     def gen_Identifier(self, node):
         self.instructions.append(IRInstruction("LOCAL_GET", node.name))
@@ -43,7 +55,7 @@ class IRGenerator:
         elif isinstance(val, bool):
             self.instructions.append(IRInstruction("CONSTB", int(val)))
         elif isinstance(val, str):
-            self.instructions.append(IRInstruction("CONSTR", val))
+            self.instructions.append(IRInstruction("CONSTI", ord(val)))
         else:
             raise Exception(f"Literal no soportado: {val}")
 
@@ -58,9 +70,13 @@ class IRGenerator:
         self.instructions.append(IRInstruction(op_map[node.operator]))
 
     def gen_UnaryOp(self, node):
-        self.generate(node.expression)
-        op_map = {'-': 'NEG', '+': 'POS', '^': 'NOT'}
-        self.instructions.append(IRInstruction(op_map[node.operator]))
+        if node.operator == '^':
+            self.generate(node.expression)
+            self.instructions.append(IRInstruction("GROW"))
+        else:
+            self.generate(node.expression)
+            op_map = {'-': 'NEG', '+': 'POS', '^': 'NOT'}
+            self.instructions.append(IRInstruction(op_map[node.operator]))
 
     def gen_PrintStatement(self, node):
         self.generate(node.expression)
@@ -92,10 +108,10 @@ class IRGenerator:
         self.instructions.append(IRInstruction("LABEL", end_label))
 
     def gen_BreakStatement(self, node):
-        self.instructions.append(IRInstruction("BREAK"))  # puede requerir contexto
+        self.instructions.append(IRInstruction("BREAK"))
 
     def gen_ContinueStatement(self, node):
-        self.instructions.append(IRInstruction("CONTINUE"))  # puede requerir contexto
+        self.instructions.append(IRInstruction("CONTINUE"))
 
     def gen_ReturnStatement(self, node):
         self.generate(node.expression)
@@ -121,10 +137,20 @@ class IRGenerator:
     def gen_Location(self, node):
         if node.is_deref:
             self.generate(node.base)
-            self.instructions.append(IRInstruction("LOAD"))
+            self.instructions.append(IRInstruction("PEEKI"))  # Asume int por defecto, puedes mejorar según contexto
         else:
             self.instructions.append(IRInstruction("LOCAL_GET", node.base.name))
 
     def gen_Parameter(self, node):
-        # Normalmente no se genera código directo aquí, pero puede usarse para definiciones
         pass
+
+    def infer_expr_type(self, expr):
+        if isinstance(expr, Literal):
+            val = expr.value
+            if isinstance(val, int): return 'int'
+            if isinstance(val, float): return 'float'
+            if isinstance(val, bool): return 'bool'
+            if isinstance(val, str): return 'char'
+        if isinstance(expr, Cast):
+            return expr.target_type
+        return 'int'  # default

@@ -2,7 +2,7 @@
 
 import sys
 import json
-
+from stack_machine import StackMachine
 from lexer import Lexer
 from Parser import Parser
 from ASemantico import SemanticAnalyzer, SemanticError
@@ -41,6 +41,10 @@ def main(filepath):
         print("\n📥 Código Intermedio (IR):")
         for instr in instructions:
             print(instr)
+
+        # Ejecutar el código intermedio
+        machine = StackMachine(instructions)
+        machine.run()
 
 
         # 6) Mostrar y guardar el AST en JSON
